@@ -33,7 +33,7 @@ and (iii) ALL the data we need to start making figures - our next section :)
 # Importing counts and TPM values
 ```{r import counts and TPM from Salmon}
 # laoding Salmon counts from NF_CORE run 3.14
-counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/soma3841/data_for_class/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
 # preparing counts for DESEQ
 # create g2s
@@ -134,9 +134,9 @@ in our results directory :) called 'count_results_DESEQ'
 
 ```{r saving DESEQ results}
 
-save(unique_sig_genes, counts_integer, g2s, res_df, filtered_res_df, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/counts_results_DESEQ/DESEQ_results.rdata")
+save(unique_sig_genes, counts_integer, g2s, res_df, filtered_res_df, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/soma3841/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/DESEQ_results.rdata")
 
-load("results/counts_results_DESEQ/DESEQ_results.rdata")
+load("results/DESEQ_results.rdata")
 ```
 
 # As a final step let's archive the average and standard deviation of our TPM values
@@ -146,8 +146,10 @@ After this last step we will have all the info we need for plotting in lv 7 !
 ```{r import counts and TPM from Salmon}
 # laoding and preparing TPM file from Salmon
 
-TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/data/results/star_salmon/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
+TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/soma3841/data_for_class/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
 
+TPM <- TPM %>%
+  select(-gene_name)
 # Filtering for TPM of at least 1 across samples.
 TPM_filtered <- TPM[rowSums(TPM) > 1, ]
 # Checking
@@ -163,13 +165,13 @@ library(matrixStats)
 
 # Time and replicate values
 time_points <- c("0", "12", "24", "48", "96")
-replicates <- c("_R1", "_R2", "_R3")
+replicates <- c("_1", "_2", "_3")
 
 # initialize list for results
 average_and_stddev_values <- list()
 # now each object into the for loop is "tp"
 for (tp in time_points) {
-  cols <- grep(paste0("WT_", tp, "_R"), colnames(TPM_filtered))
+  cols <- grep(paste0("WT_", tp, "_"), colnames(TPM_filtered))
   avg <- rowMeans(TPM_filtered[, cols])
   std_dev <- apply(TPM_filtered[, cols], 1, sd)
   std_dev <- data.frame(std_dev)
@@ -187,10 +189,10 @@ colnames(average_and_stddev_values) <- paste0(rep(time_points, each = 2), c("_av
 
 # note I am adding in some other files we just saved, this is in case
 # we just want to open up TPM data we still have G2s and Samplesheet.
-save(TPM, average_and_stddev_values, TPM_filtered, g2s, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results/TPM_results.Rdata" )
+save(TPM, average_and_stddev_values, TPM_filtered, g2s, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/soma3841/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results.Rdata" )
 
 # test
-load("results/TPM_results/TPM_results.Rdata")
+load("results/TPM_results.Rdata")
 ```
 # VERY NICE we have all our results organized and can start to make figures
 # WE ARE READY FOR LEVEL 7 - Congrats on finishing Level 6 !!
