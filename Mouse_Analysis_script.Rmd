@@ -1,0 +1,137 @@
+---
+title: "Mouse Analysis Script"
+author: "CM"
+date: "2025-03-19"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=TRUE, echo = TRUE) # I HAVE EVAL SET TO FALSE FOR TESTING REASONS!!
+library(IRanges)
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(readr)
+library(ggplot2)
+library(purrr)
+library(magrittr)
+library(pheatmap)
+library(textshape)
+library(Rcpp)
+library(DESeq2)
+library(matrixStats)
+library(latex2exp)
+```
+
+# Goal
+This script will look at (and analyze) the genes from the mouse dataset. Then we'll do a similar thing for human genes. 
+
+# Loading in TPM and DESEQ data
+```{r Loading data}
+
+# load TPM RESULTS: 
+load("RESULTS/MOUSE/TPM_results.Rdata")
+
+# laod DESEQ2 results
+load("RESULTS/MOUSE/DESEQ_results.rdata")
+
+```
+
+# Volcano Plot
+```{r volcano plot, echo=FALSE}
+
+ggplot(filtered_res_df, aes(x = log2FoldChange, y = -log10(padj))) +
+  geom_point(color = "#220066") +
+  theme_classic() +
+  labs(x = TeX("$log_2$ Fold Change"), y = TeX("$-log_{10}$ Adjusted P-value")) +
+  ggtitle("") +
+  geom_hline(yintercept = -log10(0.05), color = "#b32400") +
+  geom_vline(xintercept = c(-1, 1), color = "#4dc3ff")
+
+```
+
+
+# Heat Map
+```{r dendrogram and heatmap of significant genes, warning=FALSE}
+# Log-transform the TPM values
+log_tpm_matrix <- log2(TPM_filtered + 1)
+
+# First filter to sig genes object log_tpm_matrix
+sig_log_tpm_matrix <- log_tpm_matrix[rownames(log_tpm_matrix) %in% unique_sig_genes, ]
+
+# calculate distances
+sig_distance_matrix <- dist(t(sig_log_tpm_matrix), method = "euclidean")
+
+# cluster
+hc_sig_distance_matrix <- hclust(sig_distance_matrix, method = "complete")
+
+# Setting custom clustering and dist functions
+custom_dist <- function(x) dist(x, method = "manhattan") 
+custom_hclust <- function(x) hclust(x, method = "ward.D2") 
+
+# Set the scale
+breaks <- seq(-2, 2, length.out = 51)
+
+# Create the heatmap with specified scale limits
+pheatmap(sig_log_tpm_matrix, 
+         cluster_rows = TRUE,  
+         cluster_cols = TRUE,  
+         scale = "row",        
+         show_rownames = FALSE, 
+         show_colnames = TRUE,  
+         color = colorRampPalette(c("blue", "white", "red"))(50), # Apply the custom color palette
+         breaks = breaks,       # Apply the breaks to limit the scale
+         main = TeX("Heatmap of $log_2-$Transformed TPM Values"))
+```
+
+
+```{r stuff}
+# Now let's pick a few genes of interest to plot.
+genes <- c("H19")
+gene_values <- res_df %>%
+  filter(gene_name %in% genes)
+
+# Now the plotting beings
+ggplot(gene_values, 
+       aes(x = result_name, y = log2FoldChange )) +
+  facet_grid(gene_name ~ .) + 
+  geom_point()
+
+# So facet grid makes each gene a row 
+# Compare to facet wrap - looks better :)
+ggplot(gene_values, 
+       aes(x = result_name, y = log2FoldChange )) +
+  facet_wrap(gene_name ~ .) + 
+  geom_point()
+```
+
+
+```{r}
+gen_v_gen = read.delim("DATA/GENCODEvGENCODE_orthologs_v3.txt", header=TRUE, sep='\t')
+
+gen_v_df = data.frame(gen_v_gen)
+
+gen_v_df = gen_v_df[gen_v_df$SpeciesWithSynteny == "[Mouse]", ]
+
+gen_v_df$GeneId =  gsub("\\..*", "", gen_v_df$GeneId)
+
+filtered_res_df$gene_id
+
+# use grep
+test = str_detect(filtered_res_df$gene_id, gen_v_df$GeneId, negate = FALSE)
+## Merge the two different datasets
+
+
+
+
+```
+
+
+
+
+
+
+
+
