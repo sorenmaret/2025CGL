@@ -23,6 +23,7 @@ library(Rcpp)
 library(DESeq2)
 library(matrixStats)
 library(latex2exp)
+library(stringr)
 ```
 
 # Goal
@@ -121,7 +122,16 @@ filtered_res_df$gene_id
 
 # use grep
 test = str_detect(filtered_res_df$gene_id, gen_v_df$GeneId, negate = FALSE)
+
 ## Merge the two different datasets
+
+# Filtering df2 to keep only rows where a string_id from df1 is found in the text_column
+filtered_df <- df2 %>%
+  filter(sapply(text_column, function(x) any(str_detect(x, df1$string_id))))
+
+# Print the filtered dataframe
+print(filtered_df)
+
 
 
 

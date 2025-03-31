@@ -20,6 +20,7 @@ results/*
 work/*
 *.Rproj
 *.csv
+*.tsv
 *.gtf
 *data*
 *.pdf

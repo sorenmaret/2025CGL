@@ -26,27 +26,27 @@ First things first we need to make our data compatable. right now if we try and 
 ```{r making dataframes for analysis}
 # lets make a new dataframe with gene_id and gene_name
 mouse_gene_df <- filtered_res_df[, c("gene_id", "gene_name")]
-#lets check
-View(mouse_gene_df)
+
+head(mouse_gene_df)
 
 #we now need to remove the decimal values from our gene_id collumn for orthology analysis
 mouse_gene_df <- mouse_gene_df %>%
   mutate(gene_id = sub("\\..*", "", gene_id))
 # View result
-View(mouse_gene_df)
+head(mouse_gene_df)
 #great!! that worked. now lets do the same for our Human d
 ```
 
-```{r making dataframes for analysis}
+```{r making dataframes for analysis human}
 human_gene_df <- filtered_res_df_2[, c("gene_id", "gene_name")]
 #lets check
-View(human_gene_df)
+head(human_gene_df)
 
 #we now need to remove the decimal values from our gene_id collumn for orthology analysis
 human_gene_df <- human_gene_df %>%
   mutate(gene_id = sub("\\..*", "", gene_id))
 # view result
-View(human_gene_df)
+head(human_gene_df)
 ```
 
 ```{r filtering our orthologs}
@@ -56,7 +56,7 @@ conserved_changing_orthologues <- orthologs_filtered %>%
          Mouse.gene.stable.ID %in% mouse_gene_df$gene_id)
 
 # View the result
-View(conserved_changing_orthologues)
+head(conserved_changing_orthologues)
 
 #note how our dataframe is small than either of our 2 input dataframes suggesting that our analysis worked. 
 ```
