@@ -1,0 +1,143 @@
+---
+title: "Taylors_Law_Chapter_03_Analysis"
+author: "Soren Maret"
+date: "2025-04-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyr)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+##GOAL##: We Will now run regressions on our log transformed data to get our parameters "a" and "b". This will be our main result, but then I will do additional analysis that i will expand upon for our final project!
+```{r}
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/TPL_ANALYSIS/RData/Chapter_02.RData")
+```
+
+Cool lets get down to it. I will slowly build up our analysis using ggplot2 to do our analysis. recall from chapter one that there are 2 equivilent forms of taylors law:
+
+01: exponential: sd = b * mean^a
+02: linear: ln(sd) = a * ln(mean) + ln(b)
+
+In chapter_01 we saw that our data was linear, but some genes were expressed at a very high level (that 1:10 ratio discussed in chapter_02). In Chapter_02 we applied logs to our mean values and sd values and put them into our taylor values dataframes. we then sorted out any that were Zero. this will decrease the error at the fringes of our data.
+
+I will run this analysis on our mouse data first to build up. to begin I will simply plot our log transformed values against one another.
+```{r}
+ggplot(taylor_values_mouse_02, aes(x = log_m, y = log_sd)) +
+  geom_point() +
+  labs(title = "Gene Mean and Standard Deviation relationship", x = "ln(mean)", y = "ln(sd)") +
+  theme_minimal()
+```
+
+##RESULT##: Our data is linearly related, this is exactly what we wanted to see! This means that nothing was lost in the transformation or in the sorting.
+There is a very clear cutoff on the top of our data which is the result of the 0.0000 sorting we did in chapter_02
+
+Now lets add a regression line and see if we can perform a regression
+```{r}
+ggplot(taylor_values_mouse_02, aes(x = log_m, y = log_sd)) +
+  geom_point() +
+  geom_smooth(method = "glm", color = "red", se = TRUE) +  # Regression line
+  labs(title = "Gene Mean and Standard Deviation relationship", x = "ln(mean)", y = "ln(sd)") +
+ theme_minimal()
+```
+##RESULT##: Our line appears to nicely fit our data with a slightly negative slope from our data. 
+
+Is our line statistically signifigant? in order to test this we can ask ggplot to calculate an regression coefficient R which will be between 0.0 and 1.0 with 0 being no relationship and 1 being perfectly related.
+
+Becuase I dont want to install ggpubr I will go about calculating this the hard way: 
+```{r}
+#Calculating the coorelations coefficient: 
+cor_value <- cor(taylor_values_mouse_02$log_m, taylor_values_mouse_02$log_sd, use = "complete.obs")
+#adding it to our plot:
+ggplot(taylor_values_mouse_02, aes(x = log_m, y = log_sd)) +
+  geom_point() +
+  geom_smooth(method = "glm", color = "red", se = TRUE) +  # Regression line
+  annotate("text", x = 1, y = 8, label = paste("R =", round(cor_value, 2)), size = 5) + #R^2 value display
+  labs(title = "Gene Mean and Standard Deviation relationship", x = "ln(mean)", y = "ln(sd)") +
+ theme_minimal()
+```
+##RESULT##: 
+Our data are almost perfectly related meaning that a change in mean is almsot completely reflected as a change in sd
+
+The cutoff for signifigance with R^2 is usually around 0.9 meaning that our data are signifigant.
+
+Now that we have established that we can move onto extracting the "a" and "b" values by asking ggplot2 to add an equation for our line. But becuase I am lazy and dont want to install ggpubr i will have base R calculate the equation of my line. 
+```{r}
+lm_fit <- lm(log_sd ~ log_m, data = taylor_values_mouse_02)
+eq <- paste("y =", round(coef(lm_fit)[2], 2), "* x +", round(coef(lm_fit)[1], 2))
+
+# Compute Pearson correlation
+cor_value <- cor(taylor_values_mouse_02$log_m, taylor_values_mouse_02$log_sd, use = "complete.obs")
+
+# Plot
+ggplot(taylor_values_mouse_02, aes(x = log_m, y = log_sd)) +
+  geom_point() +
+  geom_smooth(method = "glm", color = "red", se = TRUE) +
+  annotate("text", x = 1, y = 8, label = paste("R =", round(cor_value, 2)), size = 5) +
+  annotate("text", x = 1, y = 9, label = eq, size = 5) + # Regression equation
+  labs(title = "Gene Mean and Standard Deviation relationship", x = "ln(mean)", y = "ln(sd)") +
+  theme_minimal()
+```
+##RESULT##: 
+We now have our values for "a" and "b". 
+a = 0.72 
+b = e^0.21 = 1.23. 
+Where e is eulers exponential constant and 0.21 is the log value of b. 
+
+Now lets make it look nice: 
+```{r}
+ggplot(taylor_values_mouse_02, aes(x = log_m, y = log_sd)) +
+  geom_point() +
+  geom_smooth(method = "glm", color = "red", se = TRUE) +  # Regression line
+ annotate("text", x = 1, y = 8, label = paste("R =", round(cor_value, 2)), size = 5) +
+  annotate("text", x = 1, y = 9, label = eq, size = 5) + # Regression equation
+  labs(title = "Gene Mean and Standard Deviation relationship", x = "ln(mean)", y = "ln(sd)") +
+ theme_set(theme_minimal() +
+   theme(
+              text = element_text(size = 14, family = "Georgia"),
+              plot.title = element_text(face = "bold", hjust = 0.5),
+              axis.text = element_text(color = "black"),
+              panel.grid.major = element_line(color = "gray80"),
+              panel.grid.minor = element_blank()
+            ))
+```
+
+Awesome! Now lets just use this final equation to plot our human data and extract those values:
+```{r}
+#calculate the line: 
+lm_fit_human <- lm(log_sd ~ log_m, data = taylor_values_human_02)
+eq_human <- paste("y =", round(coef(lm_fit_human)[2], 2), "* x +", round(coef(lm_fit)[1], 2))
+
+# Compute Pearson correlation
+cor_value_human <- cor(taylor_values_human_02$log_m, taylor_values_human_02$log_sd, use = "complete.obs")
+
+ggplot(taylor_values_human_02, aes(x = log_m, y = log_sd)) +
+  geom_point() +
+  geom_smooth(method = "glm", color = "red", se = TRUE) +  # Regression line
+ annotate("text", x = 1, y = 8, label = paste("R =", round(cor_value_human, 2)), size = 5) +
+  annotate("text", x = 1, y = 9, label = eq_human, size = 5) + # Regression equation
+  labs(title = "Gene Mean and Standard Deviation relationship", x = "ln(mean)", y = "ln(sd)") +
+ theme_set(theme_minimal() +
+   theme(
+              text = element_text(size = 14, family = "Georgia"),
+              plot.title = element_text(face = "bold", hjust = 0.5),
+              axis.text = element_text(color = "black"),
+              panel.grid.major = element_line(color = "gray80"),
+              panel.grid.minor = element_blank()
+            ))
+#lets just save all new files here: 
+save(taylor_values_human_02, taylor_values_mouse_02, lm_fit, lm_fit_human, cor_value, cor_value_human, eq, eq_human, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/TPL_ANALYSIS/RData/Chapter_03.RData")
+```
+
+##RESULT##
+Our values are identical for our cooreltation coefficient and our A and B values!
+this means that these datasets are similar in terms of realative expression level and mean vs sd relationship! very unexpected.
+
+##FUTURE_DIRECTIONS##
+1. Now that we know that these distrbutions are similar, I want to look at which genes are being highly expressed and examine if they are paralogues to one another.
+2. I want to do timecourse analysis on these data and determine the change in the coefficients over time.
+3. Investigate isomorphic distributions in other feilds with these values.
