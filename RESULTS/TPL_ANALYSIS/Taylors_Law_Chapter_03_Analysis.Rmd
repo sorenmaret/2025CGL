@@ -15,7 +15,7 @@ library(ggplot2)
 
 ##GOAL##: We Will now run regressions on our log transformed data to get our parameters "a" and "b". This will be our main result, but then I will do additional analysis that i will expand upon for our final project!
 ```{r}
-load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/TPL_ANALYSIS/RData/Chapter_02.RData")
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/TPL_ANALYSIS/RData/Chapter_02.RData")
 ```
 
 Cool lets get down to it. I will slowly build up our analysis using ggplot2 to do our analysis. recall from chapter one that there are 2 equivilent forms of taylors law:
@@ -130,7 +130,7 @@ ggplot(taylor_values_human_02, aes(x = log_m, y = log_sd)) +
               panel.grid.minor = element_blank()
             ))
 #lets just save all new files here: 
-save(taylor_values_human_02, taylor_values_mouse_02, lm_fit, lm_fit_human, cor_value, cor_value_human, eq, eq_human, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/TPL_ANALYSIS/RData/Chapter_03.RData")
+save(taylor_values_human_02, taylor_values_mouse_02, lm_fit, lm_fit_human, cor_value, cor_value_human, eq, eq_human, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/TPL_ANALYSIS/RData/Chapter_03.RData")
 ```
 
 ##RESULT##

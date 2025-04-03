@@ -100,7 +100,7 @@ for(i in 1:length(results_names)) {
 
 MS_res_df <- res_df
 
-save(MS_dds, MS_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/MS_LRT_res_df.RData")
+save(MS_dds, MS_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/MS_LRT_res_df.RData")
 ```
 
 ## Finding mouse genes that change signficicantly
@@ -129,7 +129,7 @@ save(MS_dds, MS_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/
   print(length(unique(filtered_res_df$gene_id))) #135
   
   MS_filtered_res_df <- filtered_res_df
-  save(MS_sig, MS_filtered_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/MS_sig.RData")
+  save(MS_sig, MS_filtered_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/MS_sig.RData")
 ```
 
 ## Preparing human data for DESEQ2 analysis
@@ -219,7 +219,7 @@ for(i in 1:length(results_names)) {
 
 human_res_df <- res_df
 
-save(human_dds, human_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/human_LRT_res_df.RData")
+save(human_dds, human_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/human_LRT_res_df.RData")
 ```
 
 ## Finding human genes that change significantly
@@ -253,7 +253,7 @@ save(human_dds, human_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STU
   print(length(unique(filtered_res_df$gene_id)))#330
   
   human_filtered_res_df <- filtered_res_df
-  save(human_sig, human_filtered_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/human_sig.RData")
+  save(human_sig, human_filtered_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/human_sig.RData")
 ```
 
 # Comparing significant human and mouse genes
@@ -289,7 +289,7 @@ MS_common_sig_lncrna <- MS_common_sig_lncrna %>%
   dplyr::rename(ensembl_gene_id = human.gene)
 #5
 
-save(synteny, common_sig, human_common_sig_lncrna, MS_common_sig_lncrna, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/common_lncRNA.RData")
+save(synteny, common_sig, human_common_sig_lncrna, MS_common_sig_lncrna, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/common_lncRNA.RData")
 ```
 
 ## Using bioMart
@@ -303,7 +303,7 @@ human_combined_sig <- bind_rows(human_common_sig_lncrna, human_common_sig, human
 MS_combined_sig <- bind_rows(MS_common_sig_lncrna, MS_common_sig, MS_common_sig_PCG) %>%
   distinct()
 
-save(human_combined_sig, MS_combined_sig, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/combined_sig.RData")
+save(human_combined_sig, MS_combined_sig, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/combined_sig.RData")
 ```
 
 # Visualizing the data
@@ -386,7 +386,7 @@ ggplot(tpm_mean_combined, aes(x = time_point, y = mean_tpm)) +
 
 # Save the plot
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "combined_sig_TPM_individule_with_errorbars.pdf",
   height = 20, width = 30, limitsize = FALSE
 )
@@ -449,7 +449,7 @@ ggplot(combined_data, aes(x = timepoint, y = log2FoldChange, group = interaction
   )
 
 # Save the plot
-ggsave(path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/", 
+ggsave(path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/", 
        filename = "combined_sig_lfc_individule.pdf", 
        height = 20, width = 30, limitsize = FALSE)
 ```
@@ -529,7 +529,7 @@ ggplot(counts_mean_combined, aes(x = time_point, y = mean_counts, group = intera
 
 # Save the plot
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "combined_sig_counts_individule_with_errorbars.pdf",
   height = 20, width = 30, limitsize = FALSE
 )
@@ -544,7 +544,7 @@ ggplot() +
   labs(title = "Overlayed Histograms of MS log2FoldChange", x = "log2FC", y = "Count") +
   theme_minimal()
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "MS_log2FoldChange_histogram.pdf",
   height = 5, width = 5, limitsize = FALSE
 )
@@ -565,7 +565,7 @@ ggplot() +
   labs(title = "Overlayed Histograms of MS tpm", x = "log10 tpm", y = "Count") +
   theme_minimal()
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "MS_tpm_histogram.pdf",
   height = 5, width = 5, limitsize = FALSE
 )
@@ -577,7 +577,7 @@ ggplot() +
   labs(title = "Overlayed Histograhuman of human log2FoldChange", x = "log2FC", y = "Count") +
   theme_minimal()
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "human_log2FoldChange_histogram.pdf",
   height = 5, width = 5, limitsize = FALSE
 )
@@ -598,7 +598,7 @@ ggplot() +
   labs(title = "Overlayed Histograhuman of human tpm", x = "log10 tpm", y = "Count") +
   theme_minimal()
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "human_tpm_histogram.pdf",
   height = 5, width = 5, limitsize = FALSE
 )
@@ -636,7 +636,7 @@ ggplot(top_terms, aes(x = term_name, y = -log10(p_value), size = intersection_si
   scale_color_manual(values = c("Human" = "blue", "Mouse" = "red"))
 
 ggsave(
-  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/ML/figures/",
+  path = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/figures/",
   filename = "GO.pdf",
   height = 5, width = 5, limitsize = FALSE
 )

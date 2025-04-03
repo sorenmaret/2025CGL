@@ -15,7 +15,7 @@ library(ggplot2)
 
 ##GOAL##: Do all realivent transformations to our data such as log transformations and sort out all genes that didn't change or returned a 0.0000 for their mean. 
 ```{r Loading in Data}
-load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/TPL_ANALYSIS/RData/Chapter_01.RData")
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/TPL_ANALYSIS/RData/Chapter_01.RData")
 ##our envionrment should be identical to where we left of in chapter_01
 ```
 
@@ -64,6 +64,6 @@ taylor_values_mouse_02 <- taylor_values_mouse[taylor_values_mouse$sd != 0, ]
 
 That got rid of a bunch of our data. now we can run our regressions. For this we will use ggplot2 in chapter_03!
 ```{r}
-save(taylor_values_human_02, taylor_values_mouse_02, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/TPL_ANALYSIS/RData/Chapter_02.RData")
+save(taylor_values_human_02, taylor_values_mouse_02, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/TPL_ANALYSIS/RData/Chapter_02.RData")
 ```
 
