@@ -1,19 +1,8 @@
 ---
-output: html_document
-editor_options: 
-  
-  chunk_output_type: console
-title: "Genehomies Final project"
-Authors: 
-- [ ] Soren Maret 
-- [ ] Kienan Higgins
-- [ ] ReAnna Owens
-- [ ] Karina Li
-- [ ] Caleb Maddry
-- [ ] - [Surina Gidha](https://github.com/Surina14)
-date: "2025_03_31"
-output: html_document
-editor_options: 
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
   chunk_output_type: console
 ---
 # Project goal: Compare human and mouse genes that change significantly with doxycyline exposure
@@ -22,10 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(pheatmap)
 library(DESeq2)
----
+```
 
 # DESEQ2 Analysis for human and mouse genes
 ## Preparing mouse data for DESEQ2 analysis
+```{r MS data}
 #Raw counts file
 MS_counts <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/DATA/MOUSE/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
@@ -132,13 +122,13 @@ save(MS_dds, MS_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/
   print(length(unique(MS_sig$gene_id)))#609
   
   #compare with non LRT results
-  load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSE/DESEQ_results.rdata")
-  filtered_res_df <- filtered_res_df %>%
-  filter(!(gene_name %in% MS_sig$gene_name))
-  print(length(unique(filtered_res_df$gene_id))) #135
+  #load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSE/DESEQ_results.rdata"), this file not exist anymore
+  #filtered_res_df <- filtered_res_df %>%
+  #filter(!(gene_name %in% MS_sig$gene_name))
+  #print(length(unique(filtered_res_df$gene_id))) #135
   
-  MS_filtered_res_df <- filtered_res_df
-  save(MS_sig, MS_filtered_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/MS_sig.RData")
+ # MS_filtered_res_df <- filtered_res_df
+  save(MS_sig, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/ML/MS_sig.RData")
 ```
 
 ## Preparing human data for DESEQ2 analysis

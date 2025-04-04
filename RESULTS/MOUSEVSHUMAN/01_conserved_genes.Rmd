@@ -41,7 +41,7 @@ head(synteny)
 
 orthologs_filtered <- orthologs[orthologs$Mouse.homology.type == "ortholog_one2one", ]
 
-save(orthologs, orthologs_filtered, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/orthologs.RData")
+save(orthologs, orthologs_filtered, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs.RData")
 
 #now, we are ready to find genes are changed in both human and mouse stem cells
 ```

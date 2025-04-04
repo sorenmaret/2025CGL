@@ -16,11 +16,11 @@ GOAL: Identify genes that changed in humans and mice stem cells in response to d
 ```{r loading in data}
 # loading realivent dataframes:
 # Loading orthologues list
-load ("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/orthologs.RData")
+load ("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs.RData")
 # Loading human sig genes
 load ("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/HUMAN/filtered_res_df_2")
 #loading mouse sig genes
-load ("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSE/DESEQ_results.rdata")
+load ("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/soma3841/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/DESEQ_results.rdata")
 ```
 First things first we need to make our data compatable. right now if we try and filter our dataframe we wont get any genes back because of the decimal values that are present in our sig gene dataframes will block our downstream analysis. 
 ```{r making dataframes for analysis}
@@ -76,8 +76,8 @@ cat(conserved_changing_orthologues_dereplicated$Gene.name, sep = "\n")
 ```
 Lets save our files!
 ```{r saving our results}
-save(human_gene_df, mouse_gene_df, conserved_changing_orthologues, conserved_changing_orthologues_dereplicated, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/orthologs_results.RData")
+save(human_gene_df, mouse_gene_df, conserved_changing_orthologues, conserved_changing_orthologues_dereplicated, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs_results.RData")
 #checking... 
-load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MS_vs_HS/orthologs_results.RData")
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs_results.RData")
 ```
 

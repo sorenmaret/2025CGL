@@ -1,0 +1,372 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={02\_Finding\_conserved\_genes.rmd},
+  pdfauthor={Soren Maret},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{02\_Finding\_conserved\_genes.rmd}
+\author{Soren Maret}
+\date{03.29.25}
+
+\begin{document}
+\maketitle
+
+GOAL: Identify genes that changed in humans and mice stem cells in
+response to dox.To do this we want to compare our lists of sig genes
+from mouse and humans to a list of orthologues. This is in effect the
+same thing as taking the union between the 2 lists.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# loading realivent dataframes:}
+\CommentTok{\# Loading orthologues list}
+\FunctionTok{load}\NormalTok{ (}\StringTok{"/scratch/Shares/rinnclass/MASTER\_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs.RData"}\NormalTok{)}
+\CommentTok{\# Loading human sig genes}
+\FunctionTok{load}\NormalTok{ (}\StringTok{"/scratch/Shares/rinnclass/MASTER\_CLASS/STUDENTS/genehomies/RESULTS/HUMAN/filtered\_res\_df\_2"}\NormalTok{)}
+\CommentTok{\#loading mouse sig genes}
+\FunctionTok{load}\NormalTok{ (}\StringTok{"/scratch/Shares/rinnclass/MASTER\_CLASS/STUDENTS/soma3841/MASTER\_CLASS/lessons/06\_Differential\_expression\_analyses/results/DESEQ\_results.rdata"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+First things first we need to make our data compatable. right now if we
+try and filter our dataframe we wont get any genes back because of the
+decimal values that are present in our sig gene dataframes will block
+our downstream analysis.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# lets make a new dataframe with gene\_id and gene\_name}
+\NormalTok{mouse\_gene\_df }\OtherTok{\textless{}{-}}\NormalTok{ filtered\_res\_df[, }\FunctionTok{c}\NormalTok{(}\StringTok{"gene\_id"}\NormalTok{, }\StringTok{"gene\_name"}\NormalTok{)]}
+
+\FunctionTok{head}\NormalTok{(mouse\_gene\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                gene_id gene_name
+## 1 ENSMUSG00000056904.3    Gm5620
+## 2 ENSMUSG00000058625.6   Gm17383
+## 3 ENSMUSG00000059751.7    Rps3a3
+## 4 ENSMUSG00000060198.7   Gm11353
+## 5 ENSMUSG00000064357.1   mt-Atp6
+## 6 ENSMUSG00000066270.3   Gm10157
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#we now need to remove the decimal values from our gene\_id collumn for orthology analysis}
+\NormalTok{mouse\_gene\_df }\OtherTok{\textless{}{-}}\NormalTok{ mouse\_gene\_df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{gene\_id =} \FunctionTok{sub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{..*"}\NormalTok{, }\StringTok{""}\NormalTok{, gene\_id))}
+\CommentTok{\# View result}
+\FunctionTok{head}\NormalTok{(mouse\_gene\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              gene_id gene_name
+## 1 ENSMUSG00000056904    Gm5620
+## 2 ENSMUSG00000058625   Gm17383
+## 3 ENSMUSG00000059751    Rps3a3
+## 4 ENSMUSG00000060198   Gm11353
+## 5 ENSMUSG00000064357   mt-Atp6
+## 6 ENSMUSG00000066270   Gm10157
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#great!! that worked. now lets do the same for our Human d}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{human\_gene\_df }\OtherTok{\textless{}{-}}\NormalTok{ filtered\_res\_df\_2[, }\FunctionTok{c}\NormalTok{(}\StringTok{"gene\_id"}\NormalTok{, }\StringTok{"gene\_name"}\NormalTok{)]}
+\CommentTok{\#lets check}
+\FunctionTok{head}\NormalTok{(human\_gene\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              gene_id gene_name
+## 1  ENSG00000001561.7     ENPP4
+## 2 ENSG00000011201.12     ANOS1
+## 3 ENSG00000012124.17      CD22
+## 4 ENSG00000023445.16     BIRC3
+## 5 ENSG00000041353.10    RAB27B
+## 6 ENSG00000043355.12      ZIC2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#we now need to remove the decimal values from our gene\_id collumn for orthology analysis}
+\NormalTok{human\_gene\_df }\OtherTok{\textless{}{-}}\NormalTok{ human\_gene\_df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{gene\_id =} \FunctionTok{sub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{..*"}\NormalTok{, }\StringTok{""}\NormalTok{, gene\_id))}
+\CommentTok{\# view result}
+\FunctionTok{head}\NormalTok{(human\_gene\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           gene_id gene_name
+## 1 ENSG00000001561     ENPP4
+## 2 ENSG00000011201     ANOS1
+## 3 ENSG00000012124      CD22
+## 4 ENSG00000023445     BIRC3
+## 5 ENSG00000041353    RAB27B
+## 6 ENSG00000043355      ZIC2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Filter the orthologue table}
+\NormalTok{conserved\_changing\_orthologues }\OtherTok{\textless{}{-}}\NormalTok{ orthologs\_filtered }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Gene.stable.ID }\SpecialCharTok{\%in\%}\NormalTok{ human\_gene\_df}\SpecialCharTok{$}\NormalTok{gene\_id,}
+\NormalTok{         Mouse.gene.stable.ID }\SpecialCharTok{\%in\%}\NormalTok{ mouse\_gene\_df}\SpecialCharTok{$}\NormalTok{gene\_id)}
+
+\CommentTok{\# View the result}
+\FunctionTok{head}\NormalTok{(conserved\_changing\_orthologues)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Gene.stable.ID Gene.stable.ID.version Transcript.stable.ID
+## 1 ENSG00000159231      ENSG00000159231.6      ENST00000290354
+## 2 ENSG00000151468     ENSG00000151468.11      ENST00000378825
+## 3 ENSG00000151468     ENSG00000151468.11      ENST00000378839
+## 4 ENSG00000187569      ENSG00000187569.3      ENST00000345088
+## 5 ENSG00000167077     ENSG00000167077.13      ENST00000401548
+## 6 ENSG00000167077     ENSG00000167077.13      ENST00000540833
+##   Transcript.stable.ID.version Gene.name
+## 1            ENST00000290354.6      CBR3
+## 2            ENST00000378825.5     CCDC3
+## 3            ENST00000378839.1     CCDC3
+## 4            ENST00000345088.3     DPPA3
+## 5            ENST00000401548.8      MEI1
+## 6            ENST00000540833.1      MEI1
+##                                                                        Gene.description
+## 1                               carbonyl reductase 3 [Source:HGNC Symbol;Acc:HGNC:1549]
+## 2                   coiled-coil domain containing 3 [Source:HGNC Symbol;Acc:HGNC:23813]
+## 3                   coiled-coil domain containing 3 [Source:HGNC Symbol;Acc:HGNC:23813]
+## 4           developmental pluripotency associated 3 [Source:HGNC Symbol;Acc:HGNC:19199]
+## 5 meiotic double-stranded break formation protein 1 [Source:HGNC Symbol;Acc:HGNC:28613]
+## 6 meiotic double-stranded break formation protein 1 [Source:HGNC Symbol;Acc:HGNC:28613]
+##   Mouse.gene.stable.ID Mouse.gene.name Mouse.homology.type
+## 1   ENSMUSG00000022947            Cbr3    ortholog_one2one
+## 2   ENSMUSG00000026676           Ccdc3    ortholog_one2one
+## 3   ENSMUSG00000026676           Ccdc3    ortholog_one2one
+## 4   ENSMUSG00000046323           Dppa3    ortholog_one2one
+## 5   ENSMUSG00000068117            Mei1    ortholog_one2one
+## 6   ENSMUSG00000068117            Mei1    ortholog_one2one
+##   X.id..target.Mouse.gene.identical.to.query.gene
+## 1                                         85.1986
+## 2                                         90.3704
+## 3                                         90.3704
+## 4                                         32.0755
+## 5                                         80.0628
+## 6                                         80.0628
+##   X.id..query.gene.identical.to.target.Mouse.gene
+## 1                                         85.1986
+## 2                                         89.3773
+## 3                                         89.3773
+## 4                                         34.0000
+## 5                                         77.0393
+## 6                                         77.0393
+##   Mouse.Gene.order.conservation.score Mouse.Whole.genome.alignment.coverage
+## 1                                 100                                100.00
+## 2                                 100                                100.00
+## 3                                 100                                100.00
+## 4                                 100                                  1.65
+## 5                                  75                                100.00
+## 6                                  75                                100.00
+##   Mouse.orthology.confidence..0.low..1.high.
+## 1                                          1
+## 2                                          1
+## 3                                          1
+## 4                                          0
+## 5                                          1
+## 6                                          1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#note how our dataframe is small than either of our 2 input dataframes suggesting that our analysis worked. }
+\end{Highlighting}
+\end{Shaded}
+
+\#RESULT:
+
+!! We have extracted 276 genes that both signifigantly changed in our
+human and mouse samples !!
+
+!! We have several duplicated genes names !!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#lets go and get rid of our duplicates based on the gene name}
+\CommentTok{\# Remove duplicate rows based on "Gene.name"}
+\NormalTok{conserved\_changing\_orthologues\_dereplicated }\OtherTok{\textless{}{-}}\NormalTok{ conserved\_changing\_orthologues }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(Gene.name, }\AttributeTok{.keep\_all =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\# WHOA that was a nearly 10x reduction. lets see what these genes are!}
+\FunctionTok{cat}\NormalTok{(conserved\_changing\_orthologues\_dereplicated}\SpecialCharTok{$}\NormalTok{Gene.name, }\AttributeTok{sep =} \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## CBR3
+## CCDC3
+## DPPA3
+## MEI1
+## RBM24
+## PSTPIP2
+## DLL1
+## BCHE
+## CPM
+## OTX2
+## SLC40A1
+## BIK
+## PTPRN
+## GCK
+## IER3
+## PPP1R3C
+## ELAVL4
+## OAS3
+## ABCC2
+## LHX5
+## PADI3
+## HTR5A
+## PSD4
+## GADL1
+## FGFR3
+## CYP1A1
+## CHAC1
+## ETV4
+## RHCG
+## SP5
+## ROBO4
+## ITGA10
+## LY6H
+## GAP43
+## IGF2
+## ATP1A4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# copy and paste into https://maayanlab.cloud/Enrichr/ }
+\end{Highlighting}
+\end{Shaded}
+
+Lets save our files!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{save}\NormalTok{(human\_gene\_df, mouse\_gene\_df, conserved\_changing\_orthologues, conserved\_changing\_orthologues\_dereplicated, }\AttributeTok{file =} \StringTok{"/scratch/Shares/rinnclass/MASTER\_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs\_results.RData"}\NormalTok{)}
+\CommentTok{\#checking... }
+\FunctionTok{load}\NormalTok{(}\StringTok{"/scratch/Shares/rinnclass/MASTER\_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs\_results.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

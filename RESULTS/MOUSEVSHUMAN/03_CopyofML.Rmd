@@ -123,7 +123,7 @@ save(MS_dds, MS_res_df, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/
   print(length(unique(MS_sig$gene_id)))#609
   
   #compare with non LRT results
-  load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSE/DESEQ_results.rdata")
+  load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/soma3841/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/DESEQ_results.rdata")
   filtered_res_df <- filtered_res_df %>%
   filter(!(gene_name %in% MS_sig$gene_name))
   print(length(unique(filtered_res_df$gene_id))) #135
@@ -297,7 +297,9 @@ Finally, we used the bioMart function in the [Ensemble gene browser](http://www.
 
 ## Combining the significant genes from the 2015 dataset, 2024 dataset, and the bioMart dataset so that we can generate plots with their data.
 ```{r combine Ulitsky, fish paper, and bioMart}
-human_combined_sig <- bind_rows(human_common_sig_lncrna, human_common_sig, human_common_sig_PCG) %>%
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/MOUSEVSHUMAN/orthologs_results.RData")
+
+human_combined_sig <- bind_rows(human_common_sig_lncrna, common_sig, conserved_changing_orthologues_dereplicated) %>%
   distinct()
 
 MS_combined_sig <- bind_rows(MS_common_sig_lncrna, MS_common_sig, MS_common_sig_PCG) %>%

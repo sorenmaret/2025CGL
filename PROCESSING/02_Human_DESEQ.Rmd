@@ -24,6 +24,7 @@ library(pheatmap)
 library(textshape)
 library(Rcpp)
 library(DESeq2)
+library(tibble)
 ```
 
 ```{r loading and cleaning up count data}
@@ -59,7 +60,7 @@ g2s <- data.frame(gene_id = rownames(hDOX_counts), gene_symbol = hDOX_counts[ , 
 ```
 
 
-```{r loading and cleaning up count data}
+```{r loading up count data}
 # The first two columns are gene_id and gene_name
 # Those will be very handy let's make an object of these
 
@@ -116,7 +117,7 @@ This helps with reproducibility for tracking names across code.
 Let's keep using this practice and get more sample info from sample_id
 
 # 2) Learning Rfuncitons & indexing to retreive name info
-```{R colData file for DESEQ2}
+```{R col file for DESEQ2}
 # Now we are going to learn another key function "sapply()"
 # This is essentially a built in for loop to go over all rows and perform the same function.
 # So here we will go through each row of split_values and run a "generic function(x)" 
@@ -168,7 +169,7 @@ dds <- DESeqDataSetFromMatrix(countData = hDOX_counts_filtered,
                               
 # Ok let's make a dds !
 
-```{r run DEseqDataSetFromMatrix }
+```{r run DEseq Data Set From Matrix }
 
 dds <- DESeqDataSetFromMatrix(countData = hDOX_counts_filtered,
                               colData = human_deseq_samples,
@@ -242,7 +243,6 @@ result_names <- resultsNames(dds)
 
 # Let's get rid of intercept
 results_names <- result_names[-1]
-view(results_names)
 
 # Now the empty data frame with values we want to grab from results
 
@@ -256,7 +256,6 @@ res_df <- data.frame("gene_id" = character(),
                      "gene_name" = character(),
                      "result_name" = character())
 
-view(res_df)
 
 ```
 
@@ -286,7 +285,6 @@ for(i in 1:length(results_names)) {
 }
 
 # Let's take a look at what we got !
-view(res_df)
 ```
 # Result: we now have all our deseq2 results in res_df object !
 
@@ -332,7 +330,6 @@ filtered_res_df_2 <- filtered_res_df %>%
 
 human_sig_genes <- unique(filtered_res_df_2$gene_id)
 
-view(human_sig_genes)
 # cool so we have 669 genes that are significantly changing in at least one time point
 ```
 # Result (again keeping track of good results)
