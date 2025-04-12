@@ -1,0 +1,190 @@
+---
+title: "Taylors_Law_Chapter_04_Timecourse"
+author: "Soren Maret"
+date: "2025-04-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(nloptr)
+library(IRanges)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(purrr)
+library(magrittr)
+library(pheatmap)
+library(textshape)
+library(Rcpp)
+library(DESeq2)
+```
+
+```{r}
+Mouse_counts <- read_tsv("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/DATA/MOUSE/salmon.merged.gene_counts.tsv")
+```
+
+```{r}
+counts_0 <- Mouse_counts[, grep("^WT_0_", colnames(Mouse_counts))]
+counts_12 <- Mouse_counts[, grep("^WT_12_", colnames(Mouse_counts))]
+counts_24 <- Mouse_counts[, grep("^WT_24_", colnames(Mouse_counts))]
+counts_48 <- Mouse_counts[, grep("^WT_48_", colnames(Mouse_counts))]
+counts_96 <- Mouse_counts[, grep("^WT_96_", colnames(Mouse_counts))]
+```
+
+```{r}
+g2s <- Mouse_counts[, c(1,2)]
+
+Mouse_counts <- Mouse_counts[, -c(1,2)]
+```
+
+```{r}
+taylor_func <- function(df) {
+  
+  df_numeric <- df[sapply(df, is.numeric)]
+  
+  row_mean <- rowMeans(df_numeric, na.rm = TRUE)
+  row_sd <- apply(df_numeric, 1, sd, na.rm = TRUE)
+  
+  ln_mean <- log(row_mean)
+  ln_sd <- log(row_sd)
+  
+  # Combine results into dataframe
+  result_df <- data.frame(
+    row_mean = row_mean,
+    row_sd = row_sd,
+    log_m = ln_mean,
+    log_sd = ln_sd
+  )
+  
+  # Remove rows where row_mean is 0
+  result_df <- result_df[result_df$row_mean !=0, ]
+  
+  return(result_df)
+}
+```
+
+```{r}
+df_names <- ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
+
+regression_results <- tibble(
+  Dataset = character(),            
+  Slope = numeric(),                # regression slope (a in y = ax + b)
+  Intercept = numeric(),            # regression intercept (b in y = ax + b)
+  R_squared = numeric(),            # R² value 
+  P_value = numeric(),              # p-value from the regression slope
+  T_value_vs_first = numeric(),     # t-stat comparing slope to that of first model
+  P_value_vs_first = numeric(),     # p-value of the t-test comparing slopes
+  time = numeric()
+)
+
+
+# Initialize variables to store the first model's parameters
+first_model <- NULL  # used to store the first model object
+b1 <- NULL           # slope from the first model
+se1 <- NULL          # standard error of slope from first model
+df1 <- NULL          # degrees of freedom of first model
+
+# Loop through each dataframe name in df_names
+for (i in seq_along(df_names)) {
+  df_name <- df_names[i]          # current dataframe name as string
+  df <- get(df_name)              # retrieve dataframe object from the environment
+  df <- taylor_func(df)           # apply your preprocessing/statistics function
+
+  # Check if the expected columns exist before running regression
+  if (all(c("log_m", "log_sd") %in% colnames(df))) {
+    # Filter out incomplete or infinite values
+    valid <- complete.cases(df$log_m, df$log_sd) &
+             !is.infinite(df$log_m) &
+             !is.infinite(df$log_sd)
+
+    # Continue only if enough valid data points exist
+    if (sum(valid) >= 2) {
+      # Perform linear regression: log_sd ~ log_m
+      model <- lm(log_sd ~ log_m, data = df[valid, ])
+
+      # Extract regression slope (a), intercept (b), R², and p-value
+      a <- coef(model)[["log_m"]]
+      b <- coef(model)[["(Intercept)"]]
+      r2 <- summary(model)$r.squared
+      p_val <- coef(summary(model))["log_m", "Pr(>|t|)"]
+
+      # If this is the first model, store its values for later comparison
+      if (is.null(first_model)) {
+        first_model <- model
+        b1 <- a
+        se1 <- coef(summary(model))["log_m", "Std. Error"]
+        df1 <- df.residual(model)
+
+        # No comparison yet for first model
+        t_val <- NA
+        p_val_vs_first <- NA
+      } else {
+        # For subsequent models, extract slope and SE
+        b2 <- a
+        se2 <- coef(summary(model))["log_m", "Std. Error"]
+        df2 <- df.residual(model)
+
+        # Calculate t-statistic to compare slope with first model's slope
+        t_val <- (b1 - b2) / sqrt(se1^2 + se2^2)
+        df_comp <- min(df1, df2)  # conservative degrees of freedom
+        p_val_vs_first <- 2 * pt(-abs(t_val), df = df_comp)  # two-tailed p-value
+      }
+
+      # Add results to the output tibble
+      regression_results <- add_row(
+        regression_results,
+        Dataset = df_name,
+        Slope = a,
+        Intercept = b,
+        R_squared = r2,
+        P_value = p_val,
+        T_value_vs_first = t_val,
+        P_value_vs_first = p_val_vs_first,
+        time = i
+      )
+    } else {
+      # Warn if there aren't enough points to perform regression
+      warning(paste("Skipping", df_name, "- not enough valid points."))
+    }
+
+  } else {
+    # Warn if expected columns are missing
+    warning(paste("Skipping", df_name, "- missing log_m or log_sd columns."))
+  }
+}
+
+# Print out the full regression summary table
+regression_results <- regression_results %>% filter(row_number() <= n()-1)
+
+print(regression_results)
+```
+
+```{r}
+ggplot(regression_results, mapping = aes(x = Time, y = Slope)) + 
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "loess")
+
+ggplot(regression_results, mapping = aes(x = Time, y = Intercept)) + 
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "loess")
+
+ggplot(regression_results, mapping = aes(x = Time, y = R_squared)) + 
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "loess")
+
+ggplot(regression_results, mapping = aes(x = Time, y = P_value_vs_first)) + 
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "loess")
+
+ggplot(regression_results, mapping = aes(x = Time, y = T_value_vs_first)) + 
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "loess")
+
+ggplot(regression_results, mapping = aes(x = R_squared, y = Slope)) +
+  geom_point() +
+  geom_smooth(formula = 'y ~ x', method = "lm")
+
+```
