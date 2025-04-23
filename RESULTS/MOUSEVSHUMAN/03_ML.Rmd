@@ -178,7 +178,7 @@ col_data$time <- time_values
 col_data$condition <- condition_values
 # Now let's add another column for replicate
 col_data$replicate <- replicate_values
-
+ 
 #facotring timepoint column
 col_data$time <- factor(col_data$time, levels = c("0", "12", "24", "48", "96"))
 levels(col_data$time)
