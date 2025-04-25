@@ -2,7 +2,7 @@
 title: "Human DESeq"
 author: "ReAnna Owens"
 date: "3/17/2025"
-output: html_document
+output: github_document
 editor_options: 
   chunk_output_type: console
 ---

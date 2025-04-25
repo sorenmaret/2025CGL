@@ -2,7 +2,7 @@
 title: "Taylors_Law_Chapter_04_Timecourse"
 author: "Soren Maret"
 date: "2025-04-07"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -163,23 +163,23 @@ print(regression_results)
 ```
 
 ```{r}
-ggplot(regression_results, mapping = aes(x = Time, y = Slope)) + 
+ggplot(regression_results, mapping = aes(x = time, y = Slope)) + 
   geom_point() +
   geom_smooth(formula = 'y ~ x', method = "loess")
 
-ggplot(regression_results, mapping = aes(x = Time, y = Intercept)) + 
+ggplot(regression_results, mapping = aes(x = time, y = Intercept)) + 
   geom_point() +
   geom_smooth(formula = 'y ~ x', method = "loess")
 
-ggplot(regression_results, mapping = aes(x = Time, y = R_squared)) + 
+ggplot(regression_results, mapping = aes(x = time, y = R_squared)) + 
   geom_point() +
   geom_smooth(formula = 'y ~ x', method = "loess")
 
-ggplot(regression_results, mapping = aes(x = Time, y = P_value_vs_first)) + 
+ggplot(regression_results, mapping = aes(x = time, y = P_value_vs_first)) + 
   geom_point() +
   geom_smooth(formula = 'y ~ x', method = "loess")
 
-ggplot(regression_results, mapping = aes(x = Time, y = T_value_vs_first)) + 
+ggplot(regression_results, mapping = aes(x = time, y = T_value_vs_first)) + 
   geom_point() +
   geom_smooth(formula = 'y ~ x', method = "loess")
 
@@ -188,3 +188,37 @@ ggplot(regression_results, mapping = aes(x = R_squared, y = Slope)) +
   geom_smooth(formula = 'y ~ x', method = "lm")
 
 ```
+
+```{r cleaning}
+  # Loop over all objects with names that contain "counts_"
+for (obj_name in ls(pattern = "^counts_")) {
+  
+  # Get the object
+  df <- get(obj_name)
+  
+  # Check it's a data frame
+  if (is.data.frame(df)) {
+    
+    # Identify only the numeric columns (e.g., expression counts)
+    numeric_cols <- sapply(df, is.numeric)
+    
+    # Compute stats only on numeric columns
+    row_mean <- rowMeans(df[, numeric_cols], na.rm = TRUE)
+    row_sd   <- apply(df[, numeric_cols], 1, sd, na.rm = TRUE)
+    row_se   <- row_sd / sqrt(rowSums(!is.na(df[, numeric_cols])))
+    
+    # Append new columns to the original dataframe
+    df$row_mean <- row_mean
+    df$row_sd   <- row_sd
+    df$row_se   <- row_se
+
+    # Assign the modified dataframe back to the original name
+    assign(obj_name, df)
+  }
+}
+```
+
+```{r}
+save(g2s, regression_results, taylor_func, counts_0, counts_12, counts_24, counts_48, counts_96, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/TPL_ANALYSIS/RData/chapter_04.RData")
+```
+

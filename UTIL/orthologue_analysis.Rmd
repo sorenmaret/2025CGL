@@ -1,9 +1,5 @@
 ---
-output:
-  html_document: default
-  pdf_document: default
-editor_options:
-  chunk_output_type: console
+output: github_document
 ---
 # Project goal: Compare human and mouse genes that change significantly with doxycyline exposure
 ```{r setup, include=FALSE}

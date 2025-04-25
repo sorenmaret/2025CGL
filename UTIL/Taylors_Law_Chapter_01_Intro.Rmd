@@ -102,4 +102,6 @@ taylor_values_human <- cbind(taylor_values_human, mean = means_human, sd = sd_hu
 taylor_values_mouse <- cbind(taylor_values_mouse, mean = means_mouse, sd = sd_mouse)
 
 save(Human_counts, Mouse_counts, taylor_values_human, taylor_values_mouse, means_human, means_mouse, sd_human, sd_mouse, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/genehomies/RESULTS/TPL_ANALYSIS/RData/Chapter_01.RData")
+
+rm(list = ls())
 ```

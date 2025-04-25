@@ -2,7 +2,7 @@
 title: "Mouse_DESEQ_results_script"
 author: "CM"
 date: "2025-03-17"
-output: html_document
+output: github_document
 editor_options: 
   chunk_output_type: console
 ---

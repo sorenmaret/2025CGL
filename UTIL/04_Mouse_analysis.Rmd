@@ -2,7 +2,7 @@
 title: "Class Project"
 author: "ML"
 date: "2025_03_31"
-output: html_document
+output: github_document
 editor_options: 
   chunk_output_type: console
 ---

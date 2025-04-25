@@ -2,11 +2,13 @@
 title: "01_Human_Nextflow.Rmd"
 author: "SJM"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  pdf_document: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
 ```
 
 # Goal: This is a file to outline everything nessisary to run the RNA-seq on human dox data. 

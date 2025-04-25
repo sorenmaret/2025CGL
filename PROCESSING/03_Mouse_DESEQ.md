@@ -1,0 +1,178 @@
+Mouse_DESEQ_results_script
+================
+CM
+2025-03-17
+
+# Goal:
+
+I want to use this
+[script](/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses)
+and change it so that our file paths are right. We’ll do counts data
+first, then do TPM.
+
+# Counts data
+
+## Importing counts
+
+``` r
+# loading Salmon counts from NF_CORE run 3.14
+counts_matrix <- read.table("DATA/MOUSE/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
+# preparing counts for DESEQ
+# create g2s
+g2s <- data.frame(
+  gene_id = rownames(counts_matrix),
+  gene_name = counts_matrix[, 1]
+)
+
+# removing gene_name column for analyses
+counts_matrix <- counts_matrix[ , -1]
+
+# Round counts to integer mode required for DESEQ2
+counts_integer <- round(counts_matrix)
+```
+
+## Creating sample sheet for deseq (coldata) from counts file
+
+``` r
+# setting up data frame with cols from counts matrix
+deseq_samples <- data.frame(
+  sample_id = colnames(counts_matrix))
+
+# creating time point and replicate cols from col names
+# Split names
+split_values <- strsplit(deseq_samples$sample_id, "_")
+
+# grabbing time point and replicate info 
+time_values <- sapply(split_values, function(x) x[[2]])
+replicate_values <- sapply(split_values, function(x) x[[3]])
+
+# placing time point and replicate info into dataframe
+deseq_samples$time_point <- time_values
+deseq_samples$replicate <- replicate_values
+
+# IMPORTANT : Factor time point and replicate
+deseq_samples$time_point <- factor(deseq_samples$time_point)
+deseq_samples$replicate <- factor(deseq_samples$replicate)
+```
+
+## Running DESEQ2
+
+``` r
+# testing sample sheet and counts are arranged properly 
+stopifnot(all(colnames(counts_integer) == rownames(deseq_samples$sample_id)))
+
+# setting up dds
+dds_time_point <- DESeqDataSetFromMatrix(countData = counts_integer,
+                              colData = deseq_samples,
+                              design = ~ time_point)
+# Run time point model
+dds_time_point <- DESeq(dds_time_point)
+```
+
+## Extracting results for each time point from DESEQ dds
+
+``` r
+# setting up result names object for input to forloop
+result_names <- resultsNames(dds_time_point)
+results_names <- result_names[-1]
+
+# Setting up dataframe
+res_df <- data.frame("gene_id" = character(), 
+                     "baseMean" = numeric(), 
+                     "log2FoldChange" = numeric(), 
+                     "lfcSE" = numeric(),
+                     "stat" = numeric(),
+                     "pvalue" = numeric(),
+                     "padj" = numeric(),
+                     "gene_name" = character(),
+                     "result_name" = character())
+
+# run for loop to retreive results from all time comparisons in dds
+for(i in 1:length(results_names)) {
+  results_name <- results_names[i]
+  res <- results(dds_time_point, name = results_name)
+  tmp_res_df <- res %>% 
+    as.data.frame() %>%
+    rownames_to_column("gene_id") %>%
+    merge(g2s) %>%
+    mutate(result_name = results_name)
+  res_df <- bind_rows(res_df, tmp_res_df)
+  
+}
+```
+
+## Filtering to significant results P \<0.05 and LFC abs(1)
+
+``` r
+filtered_res_df <- res_df %>%
+  filter(padj < 0.05, abs(log2FoldChange) > 1)
+
+unique_sig_genes <- unique(filtered_res_df$gene_id)
+```
+
+## Save the DESEQ_results
+
+``` r
+# Save the results
+save(unique_sig_genes, counts_integer, g2s, res_df, filtered_res_df, deseq_samples, file = "RESULTS/MOUSE/DESEQ_results.rdata")
+
+# Test the DESeq Results my reloading in the data
+load("RESULTS/MOUSE/DESEQ_results.rdata")
+```
+
+# TPM Data
+
+## Import TPM file from Salmon
+
+``` r
+# loading and preparing TPM file from Salmon
+TPM <- read.table("DATA/MOUSE/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
+
+# Removes the gene_name column from TPM
+TPM <- TPM %>%
+  select(-gene_name)
+
+# Filtering for TPM of at least 1 across samples.
+TPM_filtered <- TPM[rowSums(TPM) > 1, ]
+# Checking
+any(rowSums(TPM_filtered) < 1)
+any(rowSums(TPM) < 1)
+```
+
+## Calculating mean and sd for each gene in each time point (replicate mean and sd)
+
+``` r
+# Time and replicate values
+time_points <- c("0", "12", "24", "48", "96")
+replicates <- c("_1", "_2", "_3")
+
+# initialize list for results
+average_and_stddev_values <- list()
+
+# now each object into the for loop is "tp"
+for (tp in time_points) {
+  cols <- grep(paste0("WT_", tp, "_"), colnames(TPM_filtered))
+  avg <- rowMeans(TPM_filtered[, cols])
+  std_dev <- apply(TPM_filtered[, cols], 1, sd)
+  std_dev <- data.frame(std_dev)
+  combined <- cbind(avg, std_dev)
+  average_and_stddev_values <- c(average_and_stddev_values, list(combined))
+}
+
+# Convert the list to a data frame
+average_and_stddev_values <- do.call(cbind, average_and_stddev_values)
+
+# Add column names for the time points
+colnames(average_and_stddev_values) <- paste0(rep(time_points, each = 2), c("_avg", "_sd"))
+```
+
+## Now let’s save our TPM results as a seperate object
+
+``` r
+# Save the TPM file
+save(TPM, average_and_stddev_values, TPM_filtered, g2s, deseq_samples, file = "RESULTS/MOUSE/TPM_results.Rdata" )
+
+# Test by loading the data back in
+load("RESULTS/MOUSE/TPM_results.Rdata")
+```
