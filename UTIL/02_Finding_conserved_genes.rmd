@@ -2,9 +2,7 @@
 title: "02_Finding_conserved_genes.rmd"
 author: "Soren Maret"
 date: "03.29.25"
-output:
-  pdf_document: default
-  html_document: default
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
